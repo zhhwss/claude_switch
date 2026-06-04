@@ -1339,8 +1339,13 @@ function cmdDebugShowState(context) {
 
 function activate(context) {
   const editorLabel = getEditorLabel();
+  const settingsPath = detectSettingsJsonPath();
+  const remoteName = vscode.env.remoteName;  // e.g. 'ssh-remote', 'wsl', 'dev-container', or undefined (local)
+
   logInfo(`Detected editor: ${editorLabel}`);
-  logInfo(`Settings path: ${detectSettingsJsonPath()}`);
+  logInfo(`Remote context: ${remoteName || 'local (none)'}`);
+  logInfo(`Target settings: ${settingsPath}`);
+  logInfo(`Extension kind: ${vscode.env.uiKind === vscode.UIKind.Web ? 'web' : 'desktop'}`);
 
   const profilesProvider = new ApiProfilesProvider(context);
 

@@ -677,18 +677,20 @@ function getWebviewHtml(profile, isNew) {
 
 class ProfileItem extends vscode.TreeItem {
   constructor(profile, isActive, usageSummary) {
-    super(profile.name, vscode.TreeItemCollapsibleState.Collapsed);
+    const label = isActive ? `★ ${profile.name}` : profile.name;
+    super(label, vscode.TreeItemCollapsibleState.Collapsed);
     this.id = profile.id;
     this.contextValue = 'profile';
-    const activeBadge = isActive ? ' ● Active' : '';
     const usage = usageSummary ? ` · ${usageSummary}` : '';
-    this.description = `${profile.variables.length} vars${activeBadge}${usage}`;
+    this.description = isActive
+      ? `$(pass-filled) Active · ${profile.variables.length} vars${usage}`
+      : `${profile.variables.length} vars${usage}`;
     const notesLine = profile.notes ? `\n\n📝 ${profile.notes}` : '';
     this.tooltip = new vscode.MarkdownString(
       profile.variables.map(v => `- **${v.name}**: \`${v.value || '(empty)'}\``).join('\n\n') +
       `\n\n---\n*Created: ${profile.createdAt}*${notesLine}\n*ID: ${profile.id}*`
     );
-    this.iconPath = new vscode.ThemeIcon(isActive ? 'server-environment' : 'server');
+    this.iconPath = new vscode.ThemeIcon(isActive ? 'star-full' : 'server');
     this._profile = profile;
     this._isActive = isActive;
   }
@@ -1216,8 +1218,10 @@ async function cmdQuickSwitch(context, profilesProvider) {
 
   const activeId = getActiveProfileId(context);
   const items = profiles.map(p => ({
-    label: p.name,
-    description: `${p.variables.length} vars${p.id === activeId ? '  ● Active' : ''}`,
+    label: p.id === activeId ? `★ ${p.name}` : p.name,
+    description: p.id === activeId
+      ? `$(star-full) Active · ${p.variables.length} vars`
+      : `${p.variables.length} vars`,
     detail: p.notes || formatUsageSummary(context, p.id),
     profile: p,
   }));
@@ -1379,13 +1383,34 @@ function activate(context) {
   register('claudeSwitch.debugTestProfile',   () => cmdDebugTestProfile(context, profilesProvider));
   register('claudeSwitch.debugShowState',     () => cmdDebugShowState(context));
 
-  // ── Status bar item — click to quick-switch ──
+  // ── Status bar item — click to quick-switch, shows active profile ──
   const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
   statusBarItem.command = 'claudeSwitch.quickSwitch';
   statusBarItem.tooltip = 'Claude API Switch — Click to switch profile';
-  statusBarItem.text = '$(server-environment) Claude API';
-  statusBarItem.show();
   context.subscriptions.push(statusBarItem);
+
+  function updateStatusBar() {
+    const activeId = getActiveProfileId(context);
+    if (activeId) {
+      const profiles = loadProfiles(context);
+      const active = profiles.find(p => p.id === activeId);
+      if (active) {
+        statusBarItem.text = `$(star-full) ${active.name}`;
+        statusBarItem.tooltip = `Active: ${active.name} — Click to switch`;
+      } else {
+        statusBarItem.text = '$(server-environment) Claude API';
+        statusBarItem.tooltip = 'Claude API Switch — Click to switch profile';
+      }
+    } else {
+      statusBarItem.text = '$(server-environment) Claude API';
+      statusBarItem.tooltip = 'Claude API Switch — Click to switch profile';
+    }
+  }
+  updateStatusBar();
+  statusBarItem.show();
+
+  // Refresh status bar when tree view refreshes
+  profilesProvider.onDidChangeTreeData(() => updateStatusBar());
 
   logInfo('Extension activated.');
 }

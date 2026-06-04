@@ -1,6 +1,6 @@
 # 🤖 Claude API Switch
 
-> A VS Code / Cursor extension to manage and switch Claude Code API endpoint profiles — right from the sidebar.
+> A VS Code / Cursor extension to manage and switch Claude Code API endpoint profiles.
 
 [![Version](https://img.shields.io/badge/version-1.1.0-blue)](https://github.com/blackzhou/claude-switch)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
@@ -23,7 +23,7 @@
 | 📥 **Import from Current** | Capture whatever is in `settings.json` right now as a profile |
 | 📤 **Bulk Export/Import** | Backup or share all profiles as a single JSON file |
 | 🔧 **JSON Editor** | Edit profile variables as raw JSON in a text editor |
-| 🌐 **Auto-Detect Platform** | Works with Cursor, VS Code, VSCodium, Windsurf, and any VS Code fork |
+| 🌐 **Auto-Detect Editor** | Works with Cursor, VS Code, VSCodium, Windsurf, and other VS Code-based editors |
 | 🐛 **Debug Tools** | Built-in debug commands to inspect state and test the storage pipeline |
 
 ---
@@ -42,27 +42,22 @@
 
 ## 🚀 Installation
 
-### From Marketplace (recommended)
+### Install from VSIX
 
-1. Open VS Code or Cursor
-2. Go to Extensions (`Cmd+Shift+X`)
-3. Search for **"Claude API Switch"**
-4. Click **Install**
+1. Download the latest `.vsix` file from [GitHub Releases](https://github.com/blackzhou/claude-switch/releases)
+2. Open VS Code / Cursor
+3. Go to Extensions (`Cmd+Shift+X`) → **…** menu → **Install from VSIX…**
+4. Select the downloaded `.vsix` file
+5. Reload the editor
 
-### Manual Installation
+Or from the command line:
 
 ```bash
-# Clone the repo
-git clone https://github.com/blackzhou/claude-switch.git
+# VS Code
+code --install-extension claude-switch-1.1.0.vsix
 
-# Install to Cursor
-cp -r claude-switch ~/.cursor/extensions/claude-switch
-
-# Or install to VS Code
-cp -r claude-switch ~/.vscode/extensions/claude-switch
-
-# Reload the editor
-# Cmd+Shift+P → Developer: Reload Window
+# Cursor
+cursor --install-extension claude-switch-1.1.0.vsix
 ```
 
 ### From Source (Development)
@@ -166,7 +161,7 @@ Click the **▶ (Test)** inline button on any profile to verify the API endpoint
 
 ## 🧩 Supported Environments
 
-The extension automatically detects the editor it's running in:
+The extension automatically detects which editor it's running in by locating `settings.json`:
 
 | Editor | Settings Path (macOS) |
 |---|---|
@@ -176,7 +171,7 @@ The extension automatically detects the editor it's running in:
 | **Windsurf** | `~/Library/Application Support/Windsurf/User/settings.json` |
 | **Code - OSS** | `~/Library/Application Support/Code - OSS/User/settings.json` |
 
-Also works on Windows and Linux with the correct paths for each platform.
+Should also work with other VS Code-based editors and on Windows / Linux, though these have not been extensively tested.
 
 ---
 

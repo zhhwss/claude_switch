@@ -2,7 +2,7 @@
   "name": "claude-switch",
   "displayName": "Claude API Switch",
   "description": "Manage & switch Claude Code API endpoints from the sidebar. Test connectivity, track usage, one-click apply.",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "publisher": "claude-switch",
   "license": "MIT",
   "repository": {

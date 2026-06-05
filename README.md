@@ -2,7 +2,7 @@
 
 > Manage and switch Claude Code API endpoint profiles — **no Claude Code login required, just plug in your API key and go.**
 
-[![Version](https://img.shields.io/badge/version-1.1.1-blue)](https://github.com/zhhwss/claude_switch)
+[![Version](https://img.shields.io/badge/version-1.1.2-blue)](https://github.com/zhhwss/claude_switch)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![VS Code](https://img.shields.io/badge/VS%20Code-1.74%2B-007acc)](https://code.visualstudio.com/)
 [![Cursor](https://img.shields.io/badge/Cursor-compatible-8b5cf6)](https://cursor.sh/)

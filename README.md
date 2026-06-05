@@ -2,7 +2,7 @@
 
 > A VS Code / Cursor extension to manage and switch Claude Code API endpoint profiles.
 
-[![Version](https://img.shields.io/badge/version-1.1.0-blue)](https://github.com/blackzhou/claude-switch)
+[![Version](https://img.shields.io/badge/version-1.1.1-blue)](https://github.com/blackzhou/claude-switch)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![VS Code](https://img.shields.io/badge/VS%20Code-1.74%2B-007acc)](https://code.visualstudio.com/)
 [![Cursor](https://img.shields.io/badge/Cursor-compatible-8b5cf6)](https://cursor.sh/)
@@ -11,20 +11,20 @@
 
 ## ✨ Features
 
-| Feature | Description |
-|---|---|
-| 📋 **Profile CRUD** | Create, edit, duplicate, and delete API profiles with an intuitive web form |
-| ⚡ **One-Click Apply** | Apply any profile to instantly update `claudeCode.environmentVariables` |
-| 🧪 **API Testing** | Test connectivity to each endpoint — reports latency, model info, token usage, and error diagnostics |
-| 📊 **Usage Tracking** | Tracks how many times each profile was applied, with timestamps and test history |
-| 🔄 **Quick Switch** | `Cmd+Shift+P` or click the status bar to swap profiles instantly |
-| 📝 **Profile Notes** | Add descriptions to profiles (account info, expiry dates, etc.) |
-| 🎨 **Templates** | Pre-built templates for DeepSeek, Aliyun Qwen, Anthropic, Local Proxy, and more |
-| 📥 **Import from Current** | Capture whatever is in `settings.json` right now as a profile |
-| 📤 **Bulk Export/Import** | Backup or share all profiles as a single JSON file |
-| 🔧 **JSON Editor** | Edit profile variables as raw JSON in a text editor |
-| 🌐 **Auto-Detect Editor** | Works with Cursor, VS Code, VSCodium, Windsurf, and other VS Code-based editors |
-| 🐛 **Debug Tools** | Built-in debug commands to inspect state and test the storage pipeline |
+| Feature　　　　　　　　　　| Description                                                                                          |
+| ----------------------------| ------------------------------------------------------------------------------------------------------|
+| 📋 **Profile CRUD**　　　　| Create, edit, duplicate, and delete API profiles with an intuitive web form                          |
+| ⚡ **One-Click Apply**　　　| Apply any profile to instantly update `claudeCode.environmentVariables`                              |
+| 🧪 **API Testing**　　　　 | Test connectivity to each endpoint — reports latency, model info, token usage, and error diagnostics |
+| 📊 **Usage Tracking**　　　| Tracks how many times each profile was applied, with timestamps and test history                     |
+| 🔄 **Quick Switch**　　　　| `Cmd+Shift+P` or click the status bar to swap profiles instantly                                     |
+| 📝 **Profile Notes**　　　 | Add descriptions to profiles (account info, expiry dates, etc.)                                      |
+| 🎨 **Templates**　　　　　 | Pre-built templates for DeepSeek, Aliyun Qwen, Anthropic, Local Proxy, and more                      |
+| 📥 **Import from Current** | Capture whatever is in `settings.json` right now as a profile                                        |
+| 📤 **Bulk Export/Import**　| Backup or share all profiles as a single JSON file                                                   |
+| 🔧 **JSON Editor**　　　　 | Edit profile variables as raw JSON in a text editor                                                  |
+| 🌐 **Auto-Detect Editor**　| Works with Cursor, VS Code, VSCodium, Windsurf, and other VS Code-based editors                      |
+| 🐛 **Debug Tools**　　　　 | Built-in debug commands to inspect state and test the storage pipeline                               |
 
 ---
 

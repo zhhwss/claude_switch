@@ -6,3 +6,4 @@ src/**
 tsconfig.json
 **/*.ts
 **/*.map
+images/get_start.gif

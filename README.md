@@ -1,42 +1,109 @@
 # 🤖 Claude API Switch
 
-> A VS Code / Cursor extension to manage and switch Claude Code API endpoint profiles.
+> Manage and switch Claude Code API endpoint profiles — **no Claude Code login required, just plug in your API key and go.**
 
-[![Version](https://img.shields.io/badge/version-1.1.1-blue)](https://github.com/blackzhou/claude-switch)
+[![Version](https://img.shields.io/badge/version-1.1.1-blue)](https://github.com/zhhwss/claude_switch)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![VS Code](https://img.shields.io/badge/VS%20Code-1.74%2B-007acc)](https://code.visualstudio.com/)
 [![Cursor](https://img.shields.io/badge/Cursor-compatible-8b5cf6)](https://cursor.sh/)
+
+[English](README.md) | [中文](README_zh.md)
+
+---
+
+## ⚡ What is this?
+
+Claude Code connects to an AI backend via API. When you use providers like **DeepSeek**, **Alibaba Qwen**, or a local proxy, you need to set environment variables (`ANTHROPIC_BASE_URL`, `ANTHROPIC_AUTH_TOKEN`, etc.) in your editor's `settings.json`.
+
+This extension gives you a **sidebar UI** to manage those configurations as named profiles and switch between them with a single click. No more digging through JSON files by hand.
+
+> **🚫 No Claude Code account needed.** This extension only writes environment variables to `settings.json`. You bring your own API key from any Anthropic-compatible provider — it works immediately after you fill in the API endpoint and token. No login, no registration, no account required.
+
+---
+
+## 🚀 Quick Start — Add Your First Profile (3 Steps)
+
+The simplest operation: **add a profile, apply it, done.**
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/zhhwss/claude_switch/main/images/get_start.gif" alt="Get started with Claude API Switch" width="800" />
+</p>
+
+### Step ① — Open the sidebar
+
+Click the **server icon** <kbd>$(server-environment)</kbd> in the activity bar (left edge of your editor). The **"API Profiles"** panel slides open.
+
+### Step ② — Click **+** and fill in your key
+
+Click the **+** button in the sidebar toolbar → Enter a name (e.g. `My DeepSeek`) → Pick a template (DeepSeek / Aliyun / Anthropic / Local Proxy).
+
+A web form opens with most fields pre-filled. **The only thing you need to do is replace `ANTHROPIC_AUTH_TOKEN` with your actual API key**, then click **Save**.
+
+### Step ③ — Apply and test
+
+- Click the **✓ (Apply)** inline button on your new profile → writes the config to `settings.json`
+- Click the **▶ (Test)** button → verifies the endpoint is reachable and shows latency + model info
+
+**That's it.** Claude Code is now using your configured API. The whole process takes under 30 seconds.
+
+---
+
+## 🖥️ Extension Interface — Where to find everything
+
+The extension is designed so you can figure it out just by looking at the sidebar:
+
+| UI Element | Location | What it does |
+|---|---|---|
+| **Sidebar panel** | Activity bar (left edge) | Lists all your profiles with inline action buttons |
+| **+ button** | Sidebar toolbar | Add a new profile |
+| **↓ button** | Sidebar toolbar | Capture current `settings.json` config as a profile |
+| **🔄 button** | Sidebar toolbar | Quick switch between profiles |
+| **✓ Apply** | Inline on each profile | One-click write to `settings.json` |
+| **▶ Test** | Inline on each profile | Test the API endpoint (latency, model, errors) |
+| **✎ Edit** | Inline on each profile | Open the web form editor |
+| **Status bar** | Bottom of editor window | Shows current profile — click to quick-switch |
+| **Command palette** | `Cmd+Shift+P` | Search "Claude API Switch" for all commands |
+
+Each profile in the sidebar shows its name, notes preview, and usage count — active profile is marked with a **★** star.
 
 ---
 
 ## ✨ Features
 
-| Feature　　　　　　　　　　| Description                                                                                          |
-| ----------------------------| ------------------------------------------------------------------------------------------------------|
-| 📋 **Profile CRUD**　　　　| Create, edit, duplicate, and delete API profiles with an intuitive web form                          |
-| ⚡ **One-Click Apply**　　　| Apply any profile to instantly update `claudeCode.environmentVariables`                              |
-| 🧪 **API Testing**　　　　 | Test connectivity to each endpoint — reports latency, model info, token usage, and error diagnostics |
-| 📊 **Usage Tracking**　　　| Tracks how many times each profile was applied, with timestamps and test history                     |
-| 🔄 **Quick Switch**　　　　| `Cmd+Shift+P` or click the status bar to swap profiles instantly                                     |
-| 📝 **Profile Notes**　　　 | Add descriptions to profiles (account info, expiry dates, etc.)                                      |
-| 🎨 **Templates**　　　　　 | Pre-built templates for DeepSeek, Aliyun Qwen, Anthropic, Local Proxy, and more                      |
-| 📥 **Import from Current** | Capture whatever is in `settings.json` right now as a profile                                        |
-| 📤 **Bulk Export/Import**　| Backup or share all profiles as a single JSON file                                                   |
-| 🔧 **JSON Editor**　　　　 | Edit profile variables as raw JSON in a text editor                                                  |
-| 🌐 **Auto-Detect Editor**　| Works with Cursor, VS Code, VSCodium, Windsurf, and other VS Code-based editors                      |
-| 🐛 **Debug Tools**　　　　 | Built-in debug commands to inspect state and test the storage pipeline                               |
+| Feature | Description |
+|---|---|
+| 📋 **Profile CRUD** | Create, edit, duplicate, and delete API profiles with an intuitive web form |
+| ⚡ **One-Click Apply** | Apply any profile to instantly update `claudeCode.environmentVariables` |
+| 🧪 **API Testing** | Test connectivity to each endpoint — reports latency, model info, token usage, and error diagnostics |
+| 📊 **Usage Tracking** | Tracks how many times each profile was applied, with timestamps and test history |
+| 🔄 **Quick Switch** | `Cmd+Shift+P` or click the status bar to swap profiles instantly |
+| 📝 **Profile Notes** | Add descriptions to profiles (account info, expiry dates, etc.) |
+| 🎨 **Templates** | Pre-built templates for DeepSeek, Aliyun Qwen, Anthropic, Local Proxy |
+| 📥 **Import from Current** | Capture whatever is in `settings.json` right now as a profile |
+| 📤 **Bulk Export/Import** | Backup or share all profiles as a single JSON file |
+| 🔧 **JSON Editor** | Edit profile variables as raw JSON in a text editor |
+| 🌐 **Auto-Detect Editor** | Works with Cursor, VS Code, VSCodium, Windsurf, and other VS Code-based editors |
+| 🐛 **Debug Tools** | Built-in debug commands to inspect state and test the storage pipeline |
 
 ---
 
-## 📸 Screenshots
+## 📸 Demo
 
-<!-- TODO: add real screenshots -->
 <p align="center">
-  <em>Sidebar with profile list, inline actions, and usage stats</em><br/>
-  <em>Webview editor with template quick-fill and notes</em><br/>
-  <em>API test results with latency and token usage</em><br/>
-  <em>Quick Switch palette</em>
+  <img src="https://raw.githubusercontent.com/zhhwss/claude_switch/main/images/get_start.gif" alt="Claude API Switch demo" width="800" />
 </p>
+
+---
+
+## 🧩 Why use this?
+
+| Scenario | Without this extension | With this extension |
+|---|---|---|
+| Switch between DeepSeek and Aliyun | Manually edit `settings.json` each time | One click in the sidebar |
+| Test if a new API key works | `curl` commands or write a script | Click the ▶ Test button |
+| Share config with teammates | Copy-paste JSON fragments | Export profile → send file → they import |
+| Try a new model provider | Look up URLs, models, edit JSON | Pick a template, fill in the key, done |
+| Track which key you use most | Manual notes | Built-in usage stats with timestamps |
 
 ---
 
@@ -44,7 +111,7 @@
 
 ### Install from VSIX
 
-1. Download the latest `.vsix` file from [GitHub Releases](https://github.com/blackzhou/claude-switch/releases)
+1. Download the latest `.vsix` file from [GitHub Releases](https://github.com/zhhwss/claude_switch/releases)
 2. Open VS Code / Cursor
 3. Go to Extensions (`Cmd+Shift+X`) → **…** menu → **Install from VSIX…**
 4. Select the downloaded `.vsix` file
@@ -54,53 +121,19 @@ Or from the command line:
 
 ```bash
 # VS Code
-code --install-extension claude-switch-1.1.0.vsix
+code --install-extension claude-switch-1.1.1.vsix
 
 # Cursor
-cursor --install-extension claude-switch-1.1.0.vsix
+cursor --install-extension claude-switch-1.1.1.vsix
 ```
 
 ### From Source (Development)
 
 ```bash
-git clone https://github.com/blackzhou/claude-switch.git
+git clone https://github.com/zhhwss/claude_switch.git
 cd claude-switch
 # Open in VS Code / Cursor and press F5 to launch Extension Development Host
 ```
-
----
-
-## 🎯 Usage
-
-### 1. Open the Sidebar
-
-Click the **server icon** <kbd>$(server-environment)</kbd> in the activity bar to open the **API Profiles** panel.
-
-### 2. Create a Profile
-
-Click **+** → Enter a name → Choose a template (DeepSeek, Aliyun, etc.) or start empty → Fill in your API keys → **Save**.
-
-### 3. Apply & Switch
-
-- Click the **✓ (Apply)** inline button on any profile to write it to settings.json
-- Use `Cmd+Shift+P` → **"Quick Switch Profile"** to swap without opening the sidebar
-- Click the **"Claude API"** status bar button for instant switching
-
-### 4. Test Connectivity
-
-Click the **▶ (Test)** inline button on any profile to verify the API endpoint is working. Results show:
-- ✅/❌ Connection status
-- Latency in ms
-- Model returned by the server
-- Token usage for the test request
-- Detailed error message if something's wrong
-
-### 5. Manage Profiles
-
-- **Edit** — Modify variables, name, or notes in the web form
-- **Edit as JSON** — Quick raw editing in a text editor
-- **Duplicate** — Clone a profile as a starting point for a new one
-- **Export/Import** — Share individual profiles or bulk backup all profiles
 
 ---
 
@@ -138,23 +171,23 @@ Click the **▶ (Test)** inline button on any profile to verify the API endpoint
 
 ## 🔧 Commands Reference
 
-| Command | Shortcut | Description |
+| Command | How to access | Description |
 |---|---|---|
 | `Add API Profile` | Sidebar **+** | Create a new profile |
 | `Edit Profile` | Inline ✎ | Edit profile in web form |
 | `Edit Profile as JSON` | Right-click | Edit variables as raw JSON |
-| `Apply Profile` | Inline ✓ | Write to settings.json |
+| `Apply Profile` | Inline ✓ | Write to `settings.json` |
 | `Test API Connection` | Inline ▶ | Test endpoint connectivity |
-| `Quick Switch Profile` | Cmd+Shift+P | Fast profile switching |
+| `Quick Switch Profile` | `Cmd+Shift+P` | Fast profile switching |
 | `Duplicate Profile` | Right-click | Clone a profile |
 | `Import Profile from Current Settings` | Sidebar ↓ | Capture current config |
 | `Export Profile as JSON` | Right-click | Export single profile |
-| `Export All Profiles` | Cmd+Shift+P | Bulk backup |
+| `Export All Profiles` | `Cmd+Shift+P` | Bulk backup |
 | `Import Profile from JSON` | Sidebar | Import single profile |
-| `Import Profiles from JSON` | Cmd+Shift+P | Bulk import |
-| `Reload from JSON Editor` | Cmd+Shift+P | Apply JSON editor changes |
-| `View Current Config` | Cmd+Shift+P | Inspect active settings |
-| `Clear Usage Statistics` | Cmd+Shift+P | Reset usage counters |
+| `Import Profiles from JSON` | `Cmd+Shift+P` | Bulk import |
+| `Reload from JSON Editor` | `Cmd+Shift+P` | Apply JSON editor changes |
+| `View Current Config` | `Cmd+Shift+P` | Inspect active settings |
+| `Clear Usage Statistics` | `Cmd+Shift+P` | Reset usage counters |
 | `Refresh Profiles` | Sidebar ↻ | Refresh the tree view |
 
 ---
@@ -171,14 +204,14 @@ The extension automatically detects which editor it's running in by locating `se
 | **Windsurf** | `~/Library/Application Support/Windsurf/User/settings.json` |
 | **Code - OSS** | `~/Library/Application Support/Code - OSS/User/settings.json` |
 
-Should also work with other VS Code-based editors and on Windows / Linux, though these have not been extensively tested.
+Also works on Windows and Linux with platform-aware path detection.
 
 ---
 
 ## 🛠 Development
 
 ```bash
-git clone https://github.com/blackzhou/claude-switch.git
+git clone https://github.com/zhhwss/claude_switch.git
 cd claude-switch
 # Open in VS Code / Cursor
 # Press F5 to launch Extension Development Host
@@ -194,13 +227,14 @@ cd claude-switch
 ```
 claude_switch/
 ├── package.json           # Extension manifest
-├── extension.js           # All extension logic
+├── extension.js           # All extension logic (single file, zero npm dependencies)
 ├── .github/workflows/     # CI/CD for publishing
 ├── images/                # Icon files
 ├── LICENSE                # MIT
 ├── CHANGELOG.md
 ├── CONTRIBUTING.md
-└── README.md
+├── README.md
+└── README_zh.md
 ```
 
 ---

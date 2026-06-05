@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.1] — 2026-06-05
+
+### Changed
+- **Bilingual README** — README now available in English ([README.md](README.md)) and Chinese ([README_zh.md](README_zh.md)), with language switch badges
+- **Quick Start section** — Added step-by-step "3-step quick start" guide for adding the first profile, prominently featured at the top of the README
+- **Extension UI explainer** — Added a table mapping every UI element (sidebar buttons, status bar, command palette) to its function
+
 ## [1.1.0] — 2026-06-04
 
 ### Added

@@ -2,17 +2,17 @@
   "name": "claude-switch",
   "displayName": "Claude API Switch",
   "description": "Manage & switch Claude Code API endpoints from the sidebar. Test connectivity, track usage, one-click apply.",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "publisher": "claude-switch",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/blackzhou/claude-switch"
+    "url": "https://github.com/zhhwss/claude_switch"
   },
   "bugs": {
-    "url": "https://github.com/blackzhou/claude-switch/issues"
+    "url": "https://github.com/zhhwss/claude_switch/issues"
   },
-  "homepage": "https://github.com/blackzhou/claude-switch#readme",
+  "homepage": "https://github.com/zhhwss/claude_switch#readme",
   "keywords": [
     "claude",
     "claude-code",
@@ -63,42 +63,165 @@
       ]
     },
     "commands": [
-      { "command": "claudeSwitch.addProfile",        "title": "Add API Profile",              "icon": "$(add)" },
-      { "command": "claudeSwitch.editProfile",       "title": "Edit Profile",                 "icon": "$(edit)" },
-      { "command": "claudeSwitch.deleteProfile",     "title": "Delete Profile",               "icon": "$(trash)" },
-      { "command": "claudeSwitch.applyProfile",      "title": "Apply Profile",                "icon": "$(check)" },
-      { "command": "claudeSwitch.duplicateProfile",  "title": "Duplicate Profile",            "icon": "$(copy)" },
-      { "command": "claudeSwitch.exportProfile",     "title": "Export Profile as JSON",       "icon": "$(export)" },
-      { "command": "claudeSwitch.importProfile",     "title": "Import Profile from JSON",     "icon": "$(import)" },
-      { "command": "claudeSwitch.exportAll",         "title": "Export All Profiles",           "icon": "$(save-all)" },
-      { "command": "claudeSwitch.importAll",         "title": "Import Profiles from JSON",     "icon": "$(folder-opened)" },
-      { "command": "claudeSwitch.importFromCurrent", "title": "Import Profile from Current Settings", "icon": "$(arrow-down)" },
-      { "command": "claudeSwitch.editAsJson",        "title": "Edit Profile as JSON",          "icon": "$(json)" },
-      { "command": "claudeSwitch.reloadFromJson",    "title": "Reload Profile from JSON Editor", "icon": "$(refresh)" },
-      { "command": "claudeSwitch.testProfile",       "title": "Test API Connection",           "icon": "$(debug-start)" },
-      { "command": "claudeSwitch.quickSwitch",       "title": "Quick Switch Profile",          "icon": "$(replace-all)" },
-      { "command": "claudeSwitch.clearUsageStats",   "title": "Clear Usage Statistics",        "icon": "$(clear-all)" },
-      { "command": "claudeSwitch.refreshProfiles",   "title": "Refresh Profiles",              "icon": "$(refresh)" },
-      { "command": "claudeSwitch.viewCurrentConfig", "title": "View Current Config",           "icon": "$(eye)" },
-      { "command": "claudeSwitch.debugTestProfile",  "title": "Debug: Create Test Profile",    "icon": "$(debug)" },
-      { "command": "claudeSwitch.debugShowState",    "title": "Debug: Show Extension State",   "icon": "$(output)" }
+      {
+        "command": "claudeSwitch.addProfile",
+        "title": "Add API Profile",
+        "icon": "$(add)"
+      },
+      {
+        "command": "claudeSwitch.editProfile",
+        "title": "Edit Profile",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "claudeSwitch.deleteProfile",
+        "title": "Delete Profile",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "claudeSwitch.applyProfile",
+        "title": "Apply Profile",
+        "icon": "$(check)"
+      },
+      {
+        "command": "claudeSwitch.duplicateProfile",
+        "title": "Duplicate Profile",
+        "icon": "$(copy)"
+      },
+      {
+        "command": "claudeSwitch.exportProfile",
+        "title": "Export Profile as JSON",
+        "icon": "$(export)"
+      },
+      {
+        "command": "claudeSwitch.importProfile",
+        "title": "Import Profile from JSON",
+        "icon": "$(import)"
+      },
+      {
+        "command": "claudeSwitch.exportAll",
+        "title": "Export All Profiles",
+        "icon": "$(save-all)"
+      },
+      {
+        "command": "claudeSwitch.importAll",
+        "title": "Import Profiles from JSON",
+        "icon": "$(folder-opened)"
+      },
+      {
+        "command": "claudeSwitch.importFromCurrent",
+        "title": "Import Profile from Current Settings",
+        "icon": "$(arrow-down)"
+      },
+      {
+        "command": "claudeSwitch.editAsJson",
+        "title": "Edit Profile as JSON",
+        "icon": "$(json)"
+      },
+      {
+        "command": "claudeSwitch.reloadFromJson",
+        "title": "Reload Profile from JSON Editor",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "claudeSwitch.testProfile",
+        "title": "Test API Connection",
+        "icon": "$(debug-start)"
+      },
+      {
+        "command": "claudeSwitch.quickSwitch",
+        "title": "Quick Switch Profile",
+        "icon": "$(replace-all)"
+      },
+      {
+        "command": "claudeSwitch.clearUsageStats",
+        "title": "Clear Usage Statistics",
+        "icon": "$(clear-all)"
+      },
+      {
+        "command": "claudeSwitch.refreshProfiles",
+        "title": "Refresh Profiles",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "claudeSwitch.viewCurrentConfig",
+        "title": "View Current Config",
+        "icon": "$(eye)"
+      },
+      {
+        "command": "claudeSwitch.debugTestProfile",
+        "title": "Debug: Create Test Profile",
+        "icon": "$(debug)"
+      },
+      {
+        "command": "claudeSwitch.debugShowState",
+        "title": "Debug: Show Extension State",
+        "icon": "$(output)"
+      }
     ],
     "menus": {
       "view/title": [
-        { "command": "claudeSwitch.addProfile",       "when": "view == claudeSwitch.profilesView", "group": "navigation" },
-        { "command": "claudeSwitch.importFromCurrent","when": "view == claudeSwitch.profilesView", "group": "navigation" },
-        { "command": "claudeSwitch.quickSwitch",      "when": "view == claudeSwitch.profilesView", "group": "navigation" },
-        { "command": "claudeSwitch.refreshProfiles",  "when": "view == claudeSwitch.profilesView", "group": "navigation" }
+        {
+          "command": "claudeSwitch.addProfile",
+          "when": "view == claudeSwitch.profilesView",
+          "group": "navigation"
+        },
+        {
+          "command": "claudeSwitch.importFromCurrent",
+          "when": "view == claudeSwitch.profilesView",
+          "group": "navigation"
+        },
+        {
+          "command": "claudeSwitch.quickSwitch",
+          "when": "view == claudeSwitch.profilesView",
+          "group": "navigation"
+        },
+        {
+          "command": "claudeSwitch.refreshProfiles",
+          "when": "view == claudeSwitch.profilesView",
+          "group": "navigation"
+        }
       ],
       "view/item/context": [
-        { "command": "claudeSwitch.applyProfile",     "when": "view == claudeSwitch.profilesView && viewItem == profile", "group": "inline" },
-        { "command": "claudeSwitch.testProfile",      "when": "view == claudeSwitch.profilesView && viewItem == profile", "group": "inline" },
-        { "command": "claudeSwitch.editProfile",      "when": "view == claudeSwitch.profilesView && viewItem == profile", "group": "inline" },
-        { "command": "claudeSwitch.editAsJson",       "when": "view == claudeSwitch.profilesView && viewItem == profile", "group": "context@1" },
-        { "command": "claudeSwitch.duplicateProfile", "when": "view == claudeSwitch.profilesView && viewItem == profile", "group": "context@2" },
-        { "command": "claudeSwitch.exportProfile",    "when": "view == claudeSwitch.profilesView && viewItem == profile", "group": "context@3" },
-        { "command": "claudeSwitch.deleteProfile",    "when": "view == claudeSwitch.profilesView && viewItem == profile", "group": "context@4" }
+        {
+          "command": "claudeSwitch.applyProfile",
+          "when": "view == claudeSwitch.profilesView && viewItem == profile",
+          "group": "inline"
+        },
+        {
+          "command": "claudeSwitch.testProfile",
+          "when": "view == claudeSwitch.profilesView && viewItem == profile",
+          "group": "inline"
+        },
+        {
+          "command": "claudeSwitch.editProfile",
+          "when": "view == claudeSwitch.profilesView && viewItem == profile",
+          "group": "inline"
+        },
+        {
+          "command": "claudeSwitch.editAsJson",
+          "when": "view == claudeSwitch.profilesView && viewItem == profile",
+          "group": "context@1"
+        },
+        {
+          "command": "claudeSwitch.duplicateProfile",
+          "when": "view == claudeSwitch.profilesView && viewItem == profile",
+          "group": "context@2"
+        },
+        {
+          "command": "claudeSwitch.exportProfile",
+          "when": "view == claudeSwitch.profilesView && viewItem == profile",
+          "group": "context@3"
+        },
+        {
+          "command": "claudeSwitch.deleteProfile",
+          "when": "view == claudeSwitch.profilesView && viewItem == profile",
+          "group": "context@4"
+        }
       ]
     }
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^3.9.2"
   }
 }

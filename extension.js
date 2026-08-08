@@ -470,7 +470,7 @@ function escHtml(s) {
 //  WEBVIEW — Profile Editor
 // ═══════════════════════════════════════════════
 
-function getWebviewHtml(profile, isNew) {
+function getWebviewHtml(profile, isNew, mode = 'form') {
   const title = isNew ? 'New API Profile' : `Edit: ${profile?.name || ''}`;
   const nameVal = profile?.name || '';
   const notesVal = profile?.notes || '';
@@ -538,12 +538,24 @@ function getWebviewHtml(profile, isNew) {
   .success-text { color: var(--vscode-terminal-ansiGreen, #4ec9b0); }
   .error-text { color: var(--vscode-errorForeground, #f44747); }
   hr { border: none; border-top: 1px solid var(--vscode-widget-border, #333); margin: 12px 0; }
+  .mode-toggle { display: inline-flex; border: 1px solid var(--vscode-input-border, #ccc); border-radius: 4px; overflow: hidden; margin-bottom: 16px; }
+  .mode-btn { border: none; background: transparent; color: var(--vscode-descriptionForeground); padding: 5px 16px; cursor: pointer; font-family: inherit; font-size: 12px; }
+  .mode-btn:hover { background: var(--vscode-toolbar-hoverBackground); }
+  .mode-btn.active { background: var(--vscode-button-background); color: var(--vscode-button-foreground); }
+  #jsonEditor { font-family: var(--vscode-editor-font-family, monospace); font-size: 12px; line-height: 1.5; min-height: 300px; tab-size: 2; }
+  .hint { font-size: 11px; color: var(--vscode-descriptionForeground); margin-top: 4px; }
 </style>
 </head>
 <body>
 
 <h2>${escHtml(title)}</h2>
 
+<div class="mode-toggle">
+  <button id="modeForm" class="mode-btn active" type="button">📋 Form</button>
+  <button id="modeJson" class="mode-btn" type="button">{ } JSON</button>
+</div>
+
+<div id="formView">
 <div class="section">
   <label>Profile Name</label>
   <input id="profileName" type="text" value="${escHtml(nameVal)}" placeholder="My API Profile" />
@@ -569,6 +581,13 @@ function getWebviewHtml(profile, isNew) {
     <button id="btnAddRow" type="button">+ Add Variable</button>
     <span style="font-size:11px;color:var(--vscode-descriptionForeground);">Add a custom env variable</span>
   </div>
+</div>
+</div>
+
+<div id="jsonView" class="section" style="display:none;">
+  <label>Profile JSON</label>
+  <textarea id="jsonEditor" rows="16" spellcheck="false" placeholder='{ "name": "My Profile", "notes": "", "variables": [ { "name": "ANTHROPIC_BASE_URL", "value": "https://..." } ] }'></textarea>
+  <div class="hint">Edit the profile as raw JSON — clicking <strong>Save Profile</strong> validates the syntax first and only updates if it's valid.</div>
 </div>
 
 <hr />
@@ -642,10 +661,76 @@ function getWebviewHtml(profile, isNew) {
     return { name, notes, variables };
   }
 
+  // ── Form / JSON mode switching ──
+  const initialMode = '${mode}';
+  let currentMode = 'form';
+
+  function profileToJson() {
+    return JSON.stringify(collectProfile(), null, 2);
+  }
+
+  // Returns the parsed/validated profile, or null (with an error shown) if invalid.
+  function parseJsonView() {
+    const raw = document.getElementById('jsonEditor').value.trim();
+    if (!raw) { setStatus('JSON is empty.', 'error'); return null; }
+    let parsed;
+    try { parsed = JSON.parse(raw); }
+    catch (e) { setStatus('Invalid JSON: ' + e.message, 'error'); return null; }
+    if (typeof parsed.name !== 'string' || !parsed.name.trim()) {
+      setStatus('Invalid profile: "name" must be a non-empty string.', 'error'); return null;
+    }
+    if (!Array.isArray(parsed.variables)) {
+      setStatus('Invalid profile: "variables" must be an array.', 'error'); return null;
+    }
+    for (const v of parsed.variables) {
+      if (!v || typeof v.name !== 'string' || !v.name.trim()) {
+        setStatus('Invalid profile: every variable needs a non-empty "name" string.', 'error'); return null;
+      }
+    }
+    return {
+      name: parsed.name.trim(),
+      notes: typeof parsed.notes === 'string' ? parsed.notes : '',
+      variables: parsed.variables.map(v => ({
+        name: v.name.trim(),
+        value: typeof v.value === 'string' ? v.value : String(v.value ?? ''),
+      })),
+    };
+  }
+
+  function switchMode(target) {
+    if (target === currentMode) return;
+    if (target === 'json') {
+      // Serialize the current form state into the JSON view
+      document.getElementById('jsonEditor').value = profileToJson();
+    } else {
+      // Parse & validate JSON before leaving — block the switch if invalid
+      const parsed = parseJsonView();
+      if (parsed === null) return;
+      document.getElementById('profileName').value = parsed.name;
+      document.getElementById('profileNotes').value = parsed.notes;
+      fillTable(parsed.variables);
+    }
+    currentMode = target;
+    document.getElementById('modeForm').classList.toggle('active', target === 'form');
+    document.getElementById('modeJson').classList.toggle('active', target === 'json');
+    document.getElementById('formView').style.display = target === 'form' ? '' : 'none';
+    document.getElementById('jsonView').style.display = target === 'json' ? '' : 'none';
+    setStatus('');
+  }
+
+  document.getElementById('modeForm').addEventListener('click', () => switchMode('form'));
+  document.getElementById('modeJson').addEventListener('click', () => switchMode('json'));
+
   document.getElementById('btnSave').addEventListener('click', () => {
-    const profile = collectProfile();
-    if (!profile.name) { setStatus('Please enter a profile name.', 'error'); return; }
-    if (profile.variables.length === 0) { setStatus('Please add at least one environment variable.', 'error'); return; }
+    let profile;
+    if (currentMode === 'json') {
+      profile = parseJsonView();
+      if (!profile) return; // syntax check failed — nothing is saved
+    } else {
+      profile = collectProfile();
+      if (!profile.name) { setStatus('Please enter a profile name.', 'error'); return; }
+      if (profile.variables.length === 0) { setStatus('Please add at least one environment variable.', 'error'); return; }
+    }
     vscodeApi.postMessage({ type: 'save', profile });
   });
 
@@ -666,6 +751,8 @@ function getWebviewHtml(profile, isNew) {
   }
 
   bindRowEvents();
+
+  if (initialMode === 'json') switchMode('json');
 </script>
 </body>
 </html>`;
@@ -757,7 +844,7 @@ class ProfileEditorManager {
     this._reject = null;
   }
 
-  async open(profile) {
+  async open(profile, options = {}) {
     const isNew = !profile;
 
     if (this._panel) {
@@ -777,7 +864,7 @@ class ProfileEditorManager {
         vscode.ViewColumn.One,
         { enableScripts: true, retainContextWhenHidden: true }
       );
-      this._panel.webview.html = getWebviewHtml(profile, isNew);
+      this._panel.webview.html = getWebviewHtml(profile, isNew, options.mode);
 
       this._panel.onDidDispose(() => {
         this._panel = null;
@@ -885,15 +972,7 @@ async function cmdEditProfile(context, profilesProvider, profileItem) {
     logInfo(`Opening editor for: ${profile.name}`);
     try {
       const result = await _editorManager.open(profile);
-      if (result) {
-        profile.name = result.name;
-        profile.notes = result.notes || '';
-        profile.variables = result.variables;
-        profile.updatedAt = new Date().toISOString();
-        saveProfiles(context, profiles);
-        profilesProvider.refresh();
-        vscode.window.showInformationMessage(`✅ Profile "${profile.name}" updated.`);
-      }
+      if (result) saveEditedProfile(context, profilesProvider, profile, result);
     } catch (err) {
       if (err?.message !== 'Panel closed' && err?.message !== 'Cancelled') {
         logError('Editor open failed', err);
@@ -990,27 +1069,36 @@ async function cmdExportProfile(profileItem) {
 }
 
 // ── Import Profile ──
+// Accepts either a single profile object ({ name, notes, variables[] })
+// or an array of them (an "Export All" file) — imports all valid entries.
 async function cmdImportProfile(context, profilesProvider) {
   const uris = await vscode.window.showOpenDialog({
     canSelectMany: false, filters: { 'JSON Files': ['json'] }, openLabel: 'Import',
   });
   if (!uris?.length) return;
   try {
-    const raw = fs.readFileSync(uris[0].fsPath, 'utf-8');
-    const data = JSON.parse(raw);
-    if (!data.name || !Array.isArray(data.variables)) {
-      throw new Error('Invalid format: expected { name, variables[] }');
-    }
-    for (const v of data.variables) {
-      if (!v.name || typeof v.name !== 'string') throw new Error('Each variable must have a "name" field');
+    const data = JSON.parse(fs.readFileSync(uris[0].fsPath, 'utf-8'));
+    const items = (Array.isArray(data) ? data : [data]).filter(item => (
+      item && typeof item.name === 'string' && item.name.trim() &&
+      Array.isArray(item.variables) &&
+      item.variables.every(v => v && typeof v.name === 'string' && v.name.trim())
+    ));
+    if (items.length === 0) {
+      throw new Error('Invalid format: expected { name, variables[] } or an array of such objects');
     }
     const profiles = loadProfiles(context);
-    let name = data.name, suffix = 1;
-    while (profiles.some(p => p.name === name)) name = `${data.name} (${suffix++})`;
-    profiles.push(makeProfile(name, data.variables, data.notes || ''));
+    let imported = 0;
+    for (const item of items) {
+      let name = item.name.trim(), suffix = 1;
+      while (profiles.some(p => p.name === name)) name = `${item.name.trim()} (${suffix++})`;
+      profiles.push(makeProfile(name, item.variables, typeof item.notes === 'string' ? item.notes : ''));
+      imported++;
+    }
     saveProfiles(context, profiles);
     profilesProvider.refresh();
-    vscode.window.showInformationMessage(`Profile "${name}" imported.`);
+    vscode.window.showInformationMessage(
+      `${imported} profile${imported > 1 ? 's' : ''} imported from ${path.basename(uris[0].fsPath)}.`
+    );
   } catch (e) {
     vscode.window.showErrorMessage(`Import failed: ${e.message}`);
   }
@@ -1035,28 +1123,34 @@ async function cmdExportAll(context) {
 }
 
 // ── Import All Profiles ──
+// Same lenient format as single import: accepts an array of profiles or one object.
 async function cmdImportAll(context, profilesProvider) {
   const uris = await vscode.window.showOpenDialog({
     canSelectMany: false, filters: { 'JSON Files': ['json'] }, openLabel: 'Import All',
   });
   if (!uris?.length) return;
   try {
-    const raw = fs.readFileSync(uris[0].fsPath, 'utf-8');
-    const data = JSON.parse(raw);
-    if (!Array.isArray(data)) throw new Error('Expected an array of profiles');
+    const data = JSON.parse(fs.readFileSync(uris[0].fsPath, 'utf-8'));
+    const items = (Array.isArray(data) ? data : [data]).filter(item => (
+      item && typeof item.name === 'string' && item.name.trim() &&
+      Array.isArray(item.variables) &&
+      item.variables.every(v => v && typeof v.name === 'string' && v.name.trim())
+    ));
+    if (items.length === 0) throw new Error('Expected an array of profiles or a single profile object');
 
     const profiles = loadProfiles(context);
     let imported = 0;
-    for (const item of data) {
-      if (!item.name || !Array.isArray(item.variables)) continue;
-      let name = item.name, suffix = 1;
-      while (profiles.some(p => p.name === name)) name = `${item.name} (${suffix++})`;
-      profiles.push(makeProfile(name, item.variables, item.notes || ''));
+    for (const item of items) {
+      let name = item.name.trim(), suffix = 1;
+      while (profiles.some(p => p.name === name)) name = `${item.name.trim()} (${suffix++})`;
+      profiles.push(makeProfile(name, item.variables, typeof item.notes === 'string' ? item.notes : ''));
       imported++;
     }
     saveProfiles(context, profiles);
     profilesProvider.refresh();
-    vscode.window.showInformationMessage(`${imported} profiles imported.`);
+    vscode.window.showInformationMessage(
+      `${imported} profile${imported > 1 ? 's' : ''} imported from ${path.basename(uris[0].fsPath)}.`
+    );
   } catch (e) {
     vscode.window.showErrorMessage(`Import failed: ${e.message}`);
   }
@@ -1088,6 +1182,22 @@ async function cmdImportFromCurrent(context, profilesProvider) {
 }
 
 // ── Edit Profile as JSON ──
+// Opens the same webview editor in JSON mode: the Form / JSON toggle in the
+// page serializes the profile to JSON, and Save validates the syntax before
+// updating. (This replaces the old separate text-document editor, which could
+// not reliably apply changes.)
+
+// Apply a webview save result to a profile object (shared by form & JSON edits).
+function saveEditedProfile(context, profilesProvider, profile, result) {
+  profile.name = result.name;
+  profile.notes = result.notes || '';
+  profile.variables = result.variables;
+  profile.updatedAt = new Date().toISOString();
+  saveProfiles(context, loadProfiles(context));
+  profilesProvider.refresh();
+  vscode.window.showInformationMessage(`✅ Profile "${profile.name}" updated.`);
+}
+
 async function cmdEditAsJson(context, profilesProvider, profileItem) {
   if (!profileItem?._profile) {
     vscode.window.showErrorMessage('No profile selected.');
@@ -1097,78 +1207,16 @@ async function cmdEditAsJson(context, profilesProvider, profileItem) {
   const profile = profiles.find(p => p.id === profileItem.id);
   if (!profile) return;
 
-  const json = JSON.stringify({ name: profile.name, notes: profile.notes, variables: profile.variables }, null, 2);
-  const doc = await vscode.workspace.openTextDocument({
-    content: `// Edit this JSON, then save and close.\n` +
-             `// Use "Claude API Switch: Reload from JSON Editor" (Cmd+Shift+P) to apply changes.\n\n` +
-             json,
-    language: 'jsonc',
-  });
-  const editor = await vscode.window.showTextDocument(doc);
-
-  // Store pending edit info
-  const editKey = `claudeSwitch.pendingEdit-${profile.id}`;
-  context.globalState.update(editKey, { docUri: doc.uri.toString(), profileId: profile.id });
-
-  vscode.window.showInformationMessage(
-    `Editing "${profile.name}" as JSON. Run "Claude API Switch: Reload from JSON Editor" when done.`
-  );
-}
-
-// ── Reload from JSON Editor ──
-async function cmdReloadFromJson(context, profilesProvider) {
-  const prefix = 'claudeSwitch.pendingEdit-';
-  const allKeys = context.globalState.keys();
-  const editKeys = allKeys.filter(k => k.startsWith(prefix));
-
-  if (editKeys.length === 0) {
-    vscode.window.showInformationMessage('No pending JSON edits.');
-    return;
+  logInfo(`Opening JSON editor for: ${profile.name}`);
+  try {
+    const result = await _editorManager.open(profile, { mode: 'json' });
+    if (result) saveEditedProfile(context, profilesProvider, profile, result);
+  } catch (err) {
+    if (err?.message !== 'Panel closed' && err?.message !== 'Cancelled') {
+      logError('Editor save failed', err);
+      vscode.window.showErrorMessage(`Failed to save: ${err?.message || err}`);
+    }
   }
-
-  // Find the first active text editor with matching content
-  let matchedKey = null;
-  let matchedData = null;
-
-  for (const key of editKeys) {
-    const data = context.globalState.get(key);
-    if (!data) continue;
-    // Check if document is still open
-    try {
-      const doc = await vscode.workspace.openTextDocument(vscode.Uri.parse(data.docUri));
-      const content = doc.getText();
-      // Strip the leading comments
-      const jsonText = content.replace(/^\/\/.*\n/gm, '').trim();
-      const parsed = JSON.parse(jsonText);
-      if (parsed.name && Array.isArray(parsed.variables)) {
-        matchedKey = key;
-        matchedData = { ...data, parsed };
-        break;
-      }
-    } catch (_) { continue; }
-  }
-
-  if (!matchedKey) {
-    vscode.window.showErrorMessage('Could not find a valid JSON editor with profile data.');
-    return;
-  }
-
-  const profiles = loadProfiles(context);
-  const profile = profiles.find(p => p.id === matchedData.profileId);
-  if (!profile) {
-    vscode.window.showErrorMessage('Original profile no longer exists.');
-    context.globalState.update(matchedKey, undefined);
-    return;
-  }
-
-  profile.name = matchedData.parsed.name;
-  profile.notes = matchedData.parsed.notes || '';
-  profile.variables = matchedData.parsed.variables;
-  profile.updatedAt = new Date().toISOString();
-  saveProfiles(context, profiles);
-  context.globalState.update(matchedKey, undefined);
-  profilesProvider.refresh();
-  vscode.window.showInformationMessage(`✅ Profile "${profile.name}" updated from JSON editor.`);
 }
 
 // ── API Test ──
@@ -1374,7 +1422,6 @@ function activate(context) {
   register('claudeSwitch.importAll',          () => cmdImportAll(context, profilesProvider));
   register('claudeSwitch.importFromCurrent',  () => cmdImportFromCurrent(context, profilesProvider));
   register('claudeSwitch.editAsJson',         (item) => cmdEditAsJson(context, profilesProvider, item));
-  register('claudeSwitch.reloadFromJson',     () => cmdReloadFromJson(context, profilesProvider));
   register('claudeSwitch.testProfile',        (item) => cmdTestProfile(context, profilesProvider, item));
   register('claudeSwitch.quickSwitch',        () => cmdQuickSwitch(context, profilesProvider));
   register('claudeSwitch.clearUsageStats',    () => cmdClearUsageStats(context, profilesProvider));

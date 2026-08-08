@@ -58,6 +58,7 @@ Claude Code 通过 API 连接 AI 后端。当你使用 **DeepSeek**、**阿里�
 | **+ 按钮** | 侧边栏工具栏 | 添加新的 API 配置 |
 | **↓ 按钮** | 侧边栏工具栏 | 将当前 `settings.json` 中的配置抓取为一个方案 |
 | **🔄 按钮** | 侧边栏工具栏 | 快速切换配置 |
+| **⋯ 菜单** | 侧边栏工具栏 | 导出全部 / 导入配置（单个或全部）JSON |
 | **✓ Apply** | 每个配置上的按钮 | 一键写入 `settings.json` |
 | **▶ Test** | 每个配置上的按钮 | 测试 API 端点（延迟、模型、错误诊断） |
 | **✎ Edit** | 每个配置上的按钮 | 打开网页表单编辑 |
@@ -80,8 +81,8 @@ Claude Code 通过 API 连接 AI 后端。当你使用 **DeepSeek**、**阿里�
 | 📝 **配置备注** | 为配置添加说明（账号信息、到期时间等） |
 | 🎨 **内置模板** | 预置 DeepSeek、阿里千问、Anthropic 官方、本地代理等模板 |
 | 📥 **从当前导入** | 将 `settings.json` 中现有配置一键抓取为方案 |
-| 📤 **批量导出/导入** | 将所有配置备份或分享为单个 JSON 文件 |
-| 🔧 **JSON 编辑器** | 在文本编辑器中以原始 JSON 形式编辑配置 |
+| 📤 **批量导出/导入** | 将所有配置备份或分享为单个 JSON 文件；导入兼容单个配置或整个文件 |
+| 🔧 **JSON 编辑器** | 编辑器可在表单/JSON 视图间切换——保存时先校验语法，通过才更新 |
 | 🌐 **自动检测编辑器** | 兼容 Cursor、VS Code、VSCodium、Windsurf 等编辑器 |
 | 🐛 **调试工具** | 内置调试命令，检查内部状态和存储管道 |
 
@@ -175,17 +176,16 @@ cd claude-switch
 |---|---|---|
 | `Add API Profile` | 侧边栏 **+** | 创建新配置 |
 | `Edit Profile` | 行内 ✎ 按钮 | 在网页表单中编辑 |
-| `Edit Profile as JSON` | 右键菜单 | 以原始 JSON 编辑 |
+| `Edit Profile as JSON` | 右键菜单 | 以 JSON 模式打开编辑器 — 可在表单/JSON 视图间切换，保存时先校验语法 |
 | `Apply Profile` | 行内 ✓ 按钮 | 写入 `settings.json` |
 | `Test API Connection` | 行内 ▶ 按钮 | 测试端点连通性 |
 | `Quick Switch Profile` | `Cmd+Shift+P` | 快速切换配置 |
 | `Duplicate Profile` | 右键菜单 | 复制配置 |
 | `Import Profile from Current Settings` | 侧边栏 ↓ 按钮 | 抓取当前配置 |
 | `Export Profile as JSON` | 右键菜单 | 导出单个配置 |
-| `Export All Profiles` | `Cmd+Shift+P` | 批量备份 |
-| `Import Profile from JSON` | 侧边栏 | 导入单个配置 |
-| `Import Profiles from JSON` | `Cmd+Shift+P` | 批量导入 |
-| `Reload from JSON Editor` | `Cmd+Shift+P` | 应用 JSON 编辑器中的更改 |
+| `Export All Profiles` | 侧边栏 ⋯ 菜单 | 批量备份 — 所有配置导出为单个 JSON 文件 |
+| `Import Profile from JSON` | 侧边栏 ⋯ 菜单 | 导入单个配置 — 也兼容批量导出文件（全部导入） |
+| `Import Profiles from JSON` | 侧边栏 ⋯ 菜单 | 批量导入 — 也兼容单个配置对象 |
 | `View Current Config` | `Cmd+Shift+P` | 查看当前活动配置 |
 | `Clear Usage Statistics` | `Cmd+Shift+P` | 重置使用统计 |
 | `Refresh Profiles` | 侧边栏 ↻ | 刷新配置列表 |

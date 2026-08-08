@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.4] — 2026-08-08
+
+### Added
+- **Form / JSON toggle in the editor** — the Edit page now has a **Form ⇄ JSON** mode switch. "Edit Profile as JSON" opens the same editor directly in JSON view. Switching views is lossless: Form state is serialized into JSON, and JSON is parsed and validated before switching back
+- **Save validates JSON syntax** — clicking **Save Profile** in JSON mode checks the JSON syntax first and shows the exact error inline; the profile is only updated if the JSON is valid (name is a non-empty string, `variables` is an array of `{ name, value }` entries)
+- **Flexible import** — "Import Profile from JSON" and "Import Profiles from JSON" both accept a single profile object *or* an array of profiles (an Export-All file), with proper validation
+- **Sidebar menus** — Export All / Import Profile / Import Profiles are now exposed in the sidebar's "..." menu (previously only available from the command palette)
+
+### Removed
+- The standalone JSON text-document editor and the "Reload from JSON Editor" command — the old flow could not reliably apply changes (untitled documents can't be reopened by URI), so it's replaced entirely by the in-editor JSON mode
+
 ## [1.1.1] — 2026-06-05
 
 ### Changed

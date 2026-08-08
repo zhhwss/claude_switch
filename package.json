@@ -2,7 +2,7 @@
   "name": "claude-switch",
   "displayName": "Claude API Switch",
   "description": "Manage & switch Claude Code API endpoints from the sidebar. Test connectivity, track usage, one-click apply.",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "publisher": "claude-switch",
   "license": "MIT",
   "repository": {
@@ -119,11 +119,6 @@
         "icon": "$(json)"
       },
       {
-        "command": "claudeSwitch.reloadFromJson",
-        "title": "Reload Profile from JSON Editor",
-        "icon": "$(refresh)"
-      },
-      {
         "command": "claudeSwitch.testProfile",
         "title": "Test API Connection",
         "icon": "$(debug-start)"
@@ -180,6 +175,21 @@
           "command": "claudeSwitch.refreshProfiles",
           "when": "view == claudeSwitch.profilesView",
           "group": "navigation"
+        },
+        {
+          "command": "claudeSwitch.exportAll",
+          "when": "view == claudeSwitch.profilesView",
+          "group": "export@1"
+        },
+        {
+          "command": "claudeSwitch.importProfile",
+          "when": "view == claudeSwitch.profilesView",
+          "group": "import@1"
+        },
+        {
+          "command": "claudeSwitch.importAll",
+          "when": "view == claudeSwitch.profilesView",
+          "group": "import@2"
         }
       ],
       "view/item/context": [

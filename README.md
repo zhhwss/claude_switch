@@ -58,6 +58,7 @@ The extension is designed so you can figure it out just by looking at the sideba
 | **+ button** | Sidebar toolbar | Add a new profile |
 | **↓ button** | Sidebar toolbar | Capture current `settings.json` config as a profile |
 | **🔄 button** | Sidebar toolbar | Quick switch between profiles |
+| **⋯ menu** | Sidebar toolbar | Export All / Import Profile(s) from JSON |
 | **✓ Apply** | Inline on each profile | One-click write to `settings.json` |
 | **▶ Test** | Inline on each profile | Test the API endpoint (latency, model, errors) |
 | **✎ Edit** | Inline on each profile | Open the web form editor |
@@ -80,8 +81,8 @@ Each profile in the sidebar shows its name, notes preview, and usage count — a
 | 📝 **Profile Notes** | Add descriptions to profiles (account info, expiry dates, etc.) |
 | 🎨 **Templates** | Pre-built templates for DeepSeek, Aliyun Qwen, Anthropic, Local Proxy |
 | 📥 **Import from Current** | Capture whatever is in `settings.json` right now as a profile |
-| 📤 **Bulk Export/Import** | Backup or share all profiles as a single JSON file |
-| 🔧 **JSON Editor** | Edit profile variables as raw JSON in a text editor |
+| 📤 **Bulk Export/Import** | Backup or share all profiles as a single JSON file; import accepts a single profile or a whole file |
+| 🔧 **JSON Editor** | Toggle the editor between Form and JSON views — Save validates the syntax before updating |
 | 🌐 **Auto-Detect Editor** | Works with Cursor, VS Code, VSCodium, Windsurf, and other VS Code-based editors |
 | 🐛 **Debug Tools** | Built-in debug commands to inspect state and test the storage pipeline |
 
@@ -175,17 +176,16 @@ cd claude-switch
 |---|---|---|
 | `Add API Profile` | Sidebar **+** | Create a new profile |
 | `Edit Profile` | Inline ✎ | Edit profile in web form |
-| `Edit Profile as JSON` | Right-click | Edit variables as raw JSON |
+| `Edit Profile as JSON` | Right-click | Open the editor in JSON mode — toggle between Form and JSON views, Save validates the syntax first |
 | `Apply Profile` | Inline ✓ | Write to `settings.json` |
 | `Test API Connection` | Inline ▶ | Test endpoint connectivity |
 | `Quick Switch Profile` | `Cmd+Shift+P` | Fast profile switching |
 | `Duplicate Profile` | Right-click | Clone a profile |
 | `Import Profile from Current Settings` | Sidebar ↓ | Capture current config |
 | `Export Profile as JSON` | Right-click | Export single profile |
-| `Export All Profiles` | `Cmd+Shift+P` | Bulk backup |
-| `Import Profile from JSON` | Sidebar | Import single profile |
-| `Import Profiles from JSON` | `Cmd+Shift+P` | Bulk import |
-| `Reload from JSON Editor` | `Cmd+Shift+P` | Apply JSON editor changes |
+| `Export All Profiles` | Sidebar ⋯ | Bulk backup — all profiles as one JSON file |
+| `Import Profile from JSON` | Sidebar ⋯ | Import a single profile — also accepts an Export-All file (imports all) |
+| `Import Profiles from JSON` | Sidebar ⋯ | Bulk import — also accepts a single profile object |
 | `View Current Config` | `Cmd+Shift+P` | Inspect active settings |
 | `Clear Usage Statistics` | `Cmd+Shift+P` | Reset usage counters |
 | `Refresh Profiles` | Sidebar ↻ | Refresh the tree view |
